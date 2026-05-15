@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorthMatch Web App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="web-app">
+      <header class="app-topbar">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <div>
+            <strong>WorthMatch</strong>
+            <small>Buddy matching with AI</small>
+          </div>
+        </div>
+        <nav class="app-tabs" aria-label="主导航">
+          <button class="active" data-tab="agent">
+            <svg class="icon"><use href="./assets/icons/wm-icons.svg#agent"></use></svg>
+            <span>Agent</span>
+          </button>
+          <button data-tab="explore">
+            <svg class="icon"><use href="./assets/icons/wm-icons.svg#explore"></use></svg>
+            <span>探索</span>
+          </button>
+          <button data-tab="messages">
+            <svg class="icon"><use href="./assets/icons/wm-icons.svg#message"></use></svg>
+            <span>消息</span>
+          </button>
+          <button data-tab="mine">
+            <svg class="icon"><use href="./assets/icons/wm-icons.svg#profile"></use></svg>
+            <span>我的</span>
+          </button>
+        </nav>
+        <div class="top-status">
+          <span>档案 78%</span>
+          <i><b></b></i>
+        </div>
+      </header>
+
+      <main class="main-shell">
+        <section class="screen active" id="agentScreen" data-screen="agent">
+          <div class="agent-layout">
+            <aside class="thread-panel">
+              <header>
+                <strong>Agent 对话</strong>
+                <button id="newChat">新建</button>
+              </header>
+              <div class="thread-list" id="threadList"></div>
+            </aside>
+
+            <section class="agent-workspace">
+              <header class="workspace-head">
+                <div>
+                  <span>Worth Agent</span>
+                  <h1>把一句模糊想法整理成可执行的搭子计划</h1>
+                </div>
+                <div class="agent-status" id="agentMode">在线 · 可建档</div>
+              </header>
+
+              <div class="quick-prompts" id="promptStack">
+                <button data-prompt="我想周六下午找一个低压 city walk 搭子，最好能顺路喝咖啡。">低压 city walk</button>
+                <button data-prompt="我比较慢热，帮我写一个不尴尬的开场白。">不尴尬开场</button>
+                <button data-prompt="帮我从零建立一个搭子档案。">从零建档</button>
+              </div>
+
+              <div class="chat-stream" id="chatStream" aria-live="polite"></div>
+
+              <form class="composer" id="agentForm">
+                <button type="button" class="composer-button" id="attachToggle" aria-label="添加"><svg class="icon"><use href="./assets/icons/wm-icons.svg#plus"></use></svg></button>
+                <textarea id="agentInput" rows="1" placeholder="输入想法、需求、边界，或让 Agent 帮你整理活动卡"></textarea>
+                <button type="button" class="composer-button mic" id="voiceButton" aria-label="语音"><svg class="icon"><use href="./assets/icons/wm-icons.svg#mic"></use></svg></button>
+                <button type="submit" class="send-button"><svg class="icon"><use href="./assets/icons/wm-icons.svg#send"></use></svg><span>发送</span></button>
+              </form>
+
+              <div class="attachment-tray hidden" id="attachMenu">
+                <button data-attach="照片"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#photo"></use></svg><b>照片</b><small>活动氛围、头像</small></button>
+                <button data-attach="文件"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#file"></use></svg><b>文件</b><small>PDF、简历、资料</small></button>
+                <button data-attach="位置"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#pin"></use></svg><b>位置</b><small>大致区域</small></button>
+                <button data-attach="日程"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#calendar"></use></svg><b>日程</b><small>空闲时间</small></button>
+                <button data-attach="语音"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#voice"></use></svg><b>语音</b><small>转写需求</small></button>
+                <button data-attach="模板"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#template"></use></svg><b>模板</b><small>快速发布</small></button>
+              </div>
+            </section>
+
+            <aside class="agent-inspector">
+              <section>
+                <span>当前档案信号</span>
+                <h2>低压、公共场所、可自然退出</h2>
+                <p>Agent 会把你在对话中的偏好沉淀为可匹配字段，而不是让你填长表单。</p>
+              </section>
+              <section>
+                <span>下一步</span>
+                <ul>
+                  <li>确认 city walk 路线</li>
+                  <li>确认一对一或小局</li>
+                  <li>生成给对方的第一句话</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section class="screen" id="exploreScreen" data-screen="explore">
+          <header class="page-title">
+            <div>
+              <span>Explore</span>
+              <h1>探索活动与官方功能</h1>
+            </div>
+            <button class="primary-light" id="openFilter">筛选</button>
+          </header>
+
+          <div class="explore-layout">
+            <aside class="filter-panel">
+              <label class="search-box"><svg class="icon"><use href="./assets/icons/wm-icons.svg#search"></use></svg><input id="activitySearch" placeholder="搜索活动、搭子局、功能" /></label>
+              <div class="filter-group">
+                <strong>分类</strong>
+                <div class="topic-strip" id="topicRow">
+                  <button class="active" data-topic="all">全部</button>
+                  <button data-topic="official">官方</button>
+                  <button data-topic="group">组局</button>
+                  <button data-topic="test">测试</button>
+                  <button data-topic="nearby">附近</button>
+                </div>
+              </div>
+              <div class="filter-group">
+                <strong>排序</strong>
+                <div class="segmented" id="sortOptions">
+                  <button class="active" data-sort="new">最新</button>
+                  <button data-sort="soon">最近开始</button>
+                  <button data-sort="near">距离</button>
+                </div>
+              </div>
+              <div class="filter-group">
+                <strong>距离</strong>
+                <div class="segmented" id="distanceOptions">
+                  <button class="active" data-distance="all">不限</button>
+                  <button data-distance="1">1km</button>
+                  <button data-distance="3">3km</button>
+                  <button data-distance="10">10km</button>
+                </div>
+              </div>
+            </aside>
+
+            <div class="activity-feed" id="activityFeed"></div>
+          </div>
+        </section>
+
+        <section class="screen" id="messagesScreen" data-screen="messages">
+          <div class="messenger">
+            <aside class="conversation-list">
+              <header>
+                <div>
+                  <span>Messages</span>
+                  <h1>消息</h1>
+                </div>
+                <button id="addContact">添加</button>
+              </header>
+              <label class="search-box compact"><svg class="icon"><use href="./assets/icons/wm-icons.svg#search"></use></svg><input placeholder="搜索聊天或好友" /></label>
+              <div class="message-filter" id="messageFilters">
+                <button class="active" data-message-filter="all">全部</button>
+                <button data-message-filter="unread">未读</button>
+                <button data-message-filter="group">群聊</button>
+              </div>
+              <div class="chat-list" id="chatList"></div>
+            </aside>
+
+            <section class="chat-pane" id="chatRoom">
+              <header class="chat-head">
+                <button class="mobile-back" id="backToChats">返回</button>
+                <button class="chat-identity" id="roomPerson"></button>
+                <button class="icon-button" id="openPerson" aria-label="更多"><svg class="icon"><use href="./assets/icons/wm-icons.svg#more"></use></svg></button>
+              </header>
+              <div class="room-stream" id="roomStream"></div>
+              <form class="room-composer" id="roomForm">
+                <button type="button" class="composer-button" id="roomAttach"><svg class="icon"><use href="./assets/icons/wm-icons.svg#plus"></use></svg></button>
+                <input id="roomInput" placeholder="发消息，或让 AI 帮你润色" />
+                <button type="submit"><svg class="icon"><use href="./assets/icons/wm-icons.svg#send"></use></svg><span>发送</span></button>
+              </form>
+              <div class="room-attach-tray hidden" id="roomAttachMenu">
+                <button data-room-attach="照片"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#photo"></use></svg><b>照片</b><small>发送活动图</small></button>
+                <button data-room-attach="文件"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#file"></use></svg><b>文件</b><small>资料/简历</small></button>
+                <button data-room-attach="位置"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#pin"></use></svg><b>位置</b><small>共享大致区域</small></button>
+                <button data-room-attach="日程"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#calendar"></use></svg><b>日程</b><small>约时间</small></button>
+                <button data-room-attach="语音"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#voice"></use></svg><b>语音</b><small>转文字</small></button>
+                <button data-room-attach="AI润色"><svg class="tray-icon"><use href="./assets/icons/wm-icons.svg#template"></use></svg><b>AI 润色</b><small>自然开场</small></button>
+              </div>
+            </section>
+
+            <aside class="info-panel" id="infoPanel">
+              <div class="info-profile" id="infoProfile"></div>
+              <div class="info-section">
+                <strong>群/好友功能</strong>
+                <button>成员列表</button>
+                <button>共享媒体</button>
+                <button>活动记录</button>
+                <button>权限设置</button>
+              </div>
+              <div class="media-grid">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="screen" id="mineScreen" data-screen="mine">
+          <header class="page-title">
+            <div>
+              <span>Profile</span>
+              <h1>我的 WorthMatch</h1>
+            </div>
+            <button class="primary-light" id="editProfile">编辑档案</button>
+          </header>
+
+          <div class="mine-layout">
+            <section class="profile-hero" id="profileHero" role="button" tabindex="0">
+              <button class="avatar-xl" id="avatarButton" type="button" aria-label="更换头像">
+                <span>L</span>
+                <i><svg class="icon"><use href="./assets/icons/wm-icons.svg#camera"></use></svg></i>
+              </button>
+              <div>
+                <button class="profile-name" id="nameButton" type="button">Leo</button>
+                <p>上海 · AI 产品 · 低压社交 · city walk</p>
+                <div class="profile-tags">
+                  <span>公共场所优先</span>
+                  <span>可自然退出</span>
+                  <span>低频高质量</span>
+                </div>
+              </div>
+              <div class="profile-completion"><span>完整度</span><b>78%</b></div>
+            </section>
+
+            <section class="readiness-card">
+              <div><span>匹配准备度</span><strong>适合低压开局</strong></div>
+              <i><b></b></i>
+              <p>适合从具体的小事开局。偏好公共场所、可退出、不过度消耗的搭子关系。</p>
+            </section>
+
+            <section class="stat-grid">
+              <button data-profile-action="参与过"><strong>12</strong><span>参与过</span></button>
+              <button data-profile-action="收藏"><strong>8</strong><span>收藏</span></button>
+              <button data-profile-action="浏览记录"><strong>36</strong><span>浏览记录</span></button>
+              <button data-profile-action="好友"><strong>24</strong><span>好友</span></button>
+            </section>
+
+            <section class="settings-list" id="settingsList"></section>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <button class="active" data-tab="agent"><svg class="icon"><use href="./assets/icons/wm-icons.svg#agent"></use></svg><span>Agent</span></button>
+        <button data-tab="explore"><svg class="icon"><use href="./assets/icons/wm-icons.svg#explore"></use></svg><span>探索</span></button>
+        <button data-tab="messages"><svg class="icon"><use href="./assets/icons/wm-icons.svg#message"></use></svg><span>消息</span></button>
+        <button data-tab="mine"><svg class="icon"><use href="./assets/icons/wm-icons.svg#profile"></use></svg><span>我的</span></button>
+      </nav>
+    </div>
+
+    <aside class="drawer hidden" id="threadDrawer">
+      <div class="drawer-panel">
+        <header><strong>对话列表</strong><button id="closeDrawer">完成</button></header>
+        <button class="drawer-primary" id="drawerNewChat">新建 Agent 对话</button>
+        <div class="thread-list drawer-threads" id="drawerThreadList"></div>
+      </div>
+    </aside>
+
+    <aside class="modal hidden" id="detailModal">
+      <div class="modal-card" id="detailCard"></div>
+    </aside>
+
+    <input class="hidden" id="avatarInput" type="file" accept="image/*" />
+    <div class="toast" id="toast" role="status"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
