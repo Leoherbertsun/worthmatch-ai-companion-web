@@ -380,7 +380,8 @@ function bindEvents() {
 
 async function checkAiMode() {
   try {
-    await fetch("/api/health");
+    const response = await fetch("/api/health");
+    if (!response.ok) throw new Error("No local AI proxy");
     if (dom.agentMode) dom.agentMode.textContent = "在线 · 可建档";
   } catch {
     if (dom.agentMode) dom.agentMode.textContent = "本地原型";
